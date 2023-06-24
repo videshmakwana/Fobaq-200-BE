@@ -26,19 +26,11 @@ public class MyEmailService {
     @Autowired
     private AppProperties appProperties;
 
-    @Value("${smtp.email.tokenUrl}")
-    String mailSmtpAuthTokenUrl;
-    @Value("${smtp.oauth.clientId}")
-    String mailSmtpAuthClientId;
-    @Value("${smtp.oauth.secret}")
-    String mailSmtpAuthClientSecret;
-    @Value("${smtp.oauth.refresh.token}")
-    String smtpOauthRefreshToken;
 
     private long tokenExpires = 0L;
 
     public void sendMail(EmailData myDto) {
-        setJavaMailSenderPassword();
+//        setJavaMailSenderPassword();
         String message = "To activate your account, please click the link below \r\n" +
                 appProperties.getDomainName() + "/org/" + myDto.getOrgId() + "/invite-form/" + myDto.getEmpId();
         SimpleMailMessage msg = new SimpleMailMessage();
@@ -50,7 +42,6 @@ public class MyEmailService {
     }
 
     public void genaRateForgetPasswordLink(ForgetPassEmailData forgetPassEmailData) {
-        setJavaMailSenderPassword();
         String message = "To reset your account, please click the link below \r\n" +
                 appProperties.getDomainName() + "/reset/" + forgetPassEmailData.getToken();
         SimpleMailMessage msg = new SimpleMailMessage();
@@ -61,36 +52,37 @@ public class MyEmailService {
         javaMailSender.send(msg);
     }
 
-    public void setJavaMailSenderPassword() {
-        String accessToken = "";
-        if (System.currentTimeMillis() > tokenExpires) {
-            try {
-                String request = "client_id=" + URLEncoder.encode(mailSmtpAuthClientId, "UTF-8")
-                        + "&client_secret=" + URLEncoder.encode(mailSmtpAuthClientSecret, "UTF-8")
-                        + "&refresh_token=" + URLEncoder.encode(smtpOauthRefreshToken, "UTF-8")
-                        + "&grant_type=refresh_token";
-                HttpURLConnection conn = (HttpURLConnection) new URL(mailSmtpAuthTokenUrl).openConnection();
-                conn.setDoOutput(true);
-                conn.setRequestMethod("POST");
-                PrintWriter out = new PrintWriter(conn.getOutputStream());
-                out.print(request);
-                out.flush();
-                out.close();
-                conn.connect();
-                try {
-                    HashMap<String, Object> result;
-                    result = new ObjectMapper().readValue(conn.getInputStream(), new TypeReference<>() {
-                    });
-                    accessToken = (String) result.get("access_token");
-                    tokenExpires = System.currentTimeMillis() + (((Number) result.get("expires_in")).intValue() * 1000);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            ((JavaMailSenderImpl)this.javaMailSender).setPassword(accessToken);
-        }
-
-    }
+//    public void setJavaMailSenderPassword() {
+//        String accessToken = "";
+//        if (System.currentTimeMillis() > tokenExpires) {
+//            try {
+//                String request = "client_id=" + URLEncoder.encode(mailSmtpAuthClientId, "UTF-8")
+//                        + "&client_secret=" + URLEncoder.encode(mailSmtpAuthClientSecret, "UTF-8")
+//                        + "&refresh_token=" + URLEncoder.encode(smtpOauthRefreshToken, "UTF-8")
+//                        + "&grant_type=refresh_token";
+//                HttpURLConnection conn = (HttpURLConnection) new URL(mailSmtpAuthTokenUrl).openConnection();
+//                conn.setDoOutput(true);
+//                conn.setRequestMethod("POST");
+//                PrintWriter out = new PrintWriter(conn.getOutputStream());
+//                out.print(request);
+//                out.flush();
+//                out.close();
+//                conn.connect();
+//                try {
+//                    HashMap<String, Object> result;
+//                    result = new ObjectMapper().readValue(conn.getInputStream(), new TypeReference<>() {
+//                    });
+//                    accessToken = (String) result.get("access_token");
+//                    tokenExpires = System.currentTimeMillis() + (((Number) result.get("expires_in")).intValue() * 1000);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            ((JavaMailSenderImpl)this.javaMailSender).setPassword(accessToken);
+//        }
+//
+//
+//    }
 }

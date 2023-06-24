@@ -83,19 +83,7 @@ public class LoginSignupController {
     @GetMapping("/accessTokenModel")
     public AccessTokenModel getAccessTokenModelByModuleType(HttpServletRequest httpRequest) {
         String authToken = httpRequest.getHeader("Authorization");
-        AccessTokenModel accessToken = tokenStoreService.readAccessToken(authToken);
-
-        List<RoleDto> roles = rolePermissionMappingService.getRoleIdByUserIdAndOrgId(accessToken.getUserId(), null != accessToken.getOrgId() ? accessToken.getOrgId() : accessToken.getOrganizationId() );
-        List<Long> roleIdList = new ArrayList<>();
-        if (!CollectionUtils.isEmpty(roles)) {
-            for (RoleDto role : roles) {
-                roleIdList.add(role.getRoleId());
-            }
-        }
-        List<PermissionsEnum> list = rolePermissionMappingService.getPermissionList(roleIdList);
-        accessToken.setOrgId(null != accessToken.getOrgId() ? accessToken.getOrgId() : accessToken.getOrganizationId());
-        accessToken.setPermissionList(list);
-        return accessToken;
+        return tokenStoreService.readAccessToken(authToken);
     }
 
     @GetMapping("/org")
