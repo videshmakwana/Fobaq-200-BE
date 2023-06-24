@@ -17,4 +17,6 @@ public interface PostService {
      List<PostDetails> getAllPostByUser(Long userId);
 
     void downloadImage(String imageUrl, String destinationPath)throws IOException;
+
+    void saveImageName(Long postId, String imageName);
 }

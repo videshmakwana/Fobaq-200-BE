@@ -6,6 +6,8 @@ import com.brilworks.accounts.dto.PostDto;
 import com.brilworks.accounts.dto.ResponseDto;
 import com.brilworks.accounts.entity.PostDetails;
 import com.brilworks.accounts.repository.PostRepository;
+import com.brilworks.accounts.services.ImageDownloadUtil;
+import com.brilworks.accounts.services.ImageDownloadUtilService;
 import com.brilworks.accounts.services.PostService;
 import com.brilworks.accounts.utils.Constants;
 import org.apache.commons.io.FileUtils;
@@ -33,6 +35,8 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private ImageDownloadUtilService imageDownloadUtilService;
     @Override
     public ResponseDto createPost(PostDto postDto) {
         PostDetails postDetail=new PostDetails();
@@ -51,7 +55,8 @@ public class PostServiceImpl implements PostService {
                 postDetail.setLinkedIn(postDto.isLinkedIn());
                 postDetail.setSchedulerTime(postDto.getSchedulerTime());
                 postDetail.setStatus(Status.UPDATED);
-                postRepository.save(postDetail);
+                postDetail=postRepository.save(postDetail);
+                imageDownloadUtilService.downloadImage(postDetail.getId(),postDetail.getImageURL());
             }
         }
         else {
@@ -66,7 +71,8 @@ public class PostServiceImpl implements PostService {
             postDetail.setLinkedIn(postDto.isLinkedIn());
             postDetail.setSchedulerTime(postDto.getSchedulerTime());
             postDetail.setStatus(Status.CREATED);
-            postRepository.save(postDetail);
+            postDetail=postRepository.save(postDetail);
+            imageDownloadUtilService.downloadImage(postDetail.getId(),postDetail.getImageURL());
         }
         return new ResponseDto(Constants.SUCCESS, Constants.UPDATED);
     }
@@ -91,5 +97,15 @@ public class PostServiceImpl implements PostService {
             FileUtils.copyInputStreamToFile(imageEntity.getContent(), destinationFile);
             }
         }
+
+    @Override
+    public void saveImageName(Long postId, String imageName) {
+        Optional<PostDetails> postDetails = postRepository.findById(postId);
+        if (postDetails.isPresent())
+        {
+            postDetails.get().setImageName(imageName);
+            postRepository.save(postDetails.get());
+        }
+    }
 
 }
