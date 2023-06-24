@@ -17,14 +17,10 @@ public class EmailConfiguration {
     String mailPort;
     @Value("${spring.mail.username}")
     String mailUser;
-    @Value("${spring.mail.smtp.auth.mechanisms}")
-    String mailAuthMechanisms;
-    @Value("${spring.mail.properties.mail.smtp.auth}")
-    String mailSmtpAuth;
-    @Value("${spring.mail.properties.mail.smtp.starttls.enable}")
-    String mailSmtpStarttlsEnable;
-    @Value("${mail.smtp.debug}")
-    String mailSmtpDebug;
+
+    @Value("${spring.mail.password}")
+    String mailPassword;
+
 
     @Bean
     public JavaMailSender getMailSender() {
@@ -32,13 +28,10 @@ public class EmailConfiguration {
         mailSender.setHost(mailHost);
         mailSender.setPort(Integer.valueOf(mailPort));
         mailSender.setUsername(mailUser);
+        mailSender.setPassword(mailPassword);
 
         Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.smtp.starttls.enable", mailSmtpStarttlsEnable);
-        props.put("mail.smtp.auth", mailSmtpAuth);
-        props.put("mail.debug", mailSmtpDebug);
-        props.put("mail.smtp.auth.mechanisms", mailAuthMechanisms);
-
+        props.put("mail.smtp.starttls.enable", "true");
         return mailSender;
     }
 

@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getEmployeeByEmailOrUserName(String email) {
-        return userRepository.getEmployeeByEmailOrUserName(email, email);
+        return userRepository.getEmployeeByEmailOrUserName(email);
     }
 
     public List<User> getUsers() {
