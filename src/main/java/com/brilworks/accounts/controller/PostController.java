@@ -29,7 +29,8 @@ public class PostController {
     }
 
     @GetMapping(value = "/{userId}")
-    public List<PostDetails> getAllPostByUser(@PathVariable("userId")Long userId){
+    public List<PostDetails> getAllPostByUser(@PathVariable("userId") Long userId,Authentication authorization){
+        authValidator.authUser(authorization);
         return postService.getAllPostByUser(userId);
     }
 }
