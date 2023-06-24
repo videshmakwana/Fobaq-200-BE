@@ -28,9 +28,9 @@ public class PostController {
         return "postService.createPost(postDto,postId);";
     }
 
-    @GetMapping(value = "/{userId}")
-    public List<PostDetails> getAllPostByUser(@PathVariable("userId") Long userId,Authentication authorization){
+    @PostMapping(value = "/all")
+    public List<PostDetails> getAllPostByUser(@RequestBody FindPostDto findPostDto,Authentication authorization){
         authValidator.authUser(authorization);
-        return postService.getAllPostByUser(userId);
+        return postService.getAllPostByUser(findPostDto.getUserId());
     }
 }
