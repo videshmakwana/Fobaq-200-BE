@@ -8,8 +8,22 @@ import com.brilworks.accounts.entity.PostDetails;
 import com.brilworks.accounts.repository.PostRepository;
 import com.brilworks.accounts.services.PostService;
 import com.brilworks.accounts.utils.Constants;
+import org.apache.commons.io.FileUtils;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 import java.util.List;
 import java.util.Optional;
@@ -61,4 +75,21 @@ public class PostServiceImpl implements PostService {
     public List<PostDetails> getAllPostByUser(Long userId) {
         return postRepository.getAllPostByUser(userId);
     }
+
+
+
+    @Override
+    public void downloadImage(String imageUrl, String destinationPath) throws IOException {
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpGet httpGet = new HttpGet(imageUrl);
+
+        HttpResponse response = httpClient.execute(httpGet);
+        HttpEntity imageEntity = response.getEntity();
+
+        if (imageEntity != null) {
+            File destinationFile = new File(destinationPath);
+            FileUtils.copyInputStreamToFile(imageEntity.getContent(), destinationFile);
+            }
+        }
+
 }
