@@ -208,7 +208,7 @@ public class UserServiceImpl implements UserService {
     private User checkUserAndIfNotExistsCreateUser(LoginRequest logInRequest) {
         User userById = userRepository.findByEmail(logInRequest.getEmail());
         if (userById != null) {
-            return userById;
+            throw new NotFoundException(NotFoundException.NotFound.EMAIL_ALREADY_PRESENT_FOUND);
         }else {
             User user = new User();
             user.setEmail(logInRequest.getEmail());

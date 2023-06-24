@@ -8,5 +8,5 @@ import lombok.Getter;
 public enum RecStatus {
     INVITED,
     ACTIVE,
-    CREATED,DELETED
+    CREATED,DELETED,SENT,UPDATED
 }
