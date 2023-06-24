@@ -56,7 +56,7 @@ public class PostServiceImpl implements PostService {
                 postDetail.setSchedulerTime(postDto.getSchedulerTime());
                 postDetail.setStatus(Status.UPDATED);
                 postDetail=postRepository.save(postDetail);
-                imageDownloadUtilService.downloadImage(postDetail.getId(),postDetail.getImageURL());
+//                imageDownloadUtilService.downloadImage(postDetail.getId(),postDetail.getImageURL());
             }
         }
         else {
@@ -72,7 +72,7 @@ public class PostServiceImpl implements PostService {
             postDetail.setSchedulerTime(postDto.getSchedulerTime());
             postDetail.setStatus(Status.CREATED);
             postDetail=postRepository.save(postDetail);
-            imageDownloadUtilService.downloadImage(postDetail.getId(),postDetail.getImageURL());
+//            imageDownloadUtilService.downloadImage(postDetail.getId(),postDetail.getImageURL());
         }
         return new ResponseDto(Constants.SUCCESS, Constants.UPDATED);
     }
