@@ -63,4 +63,7 @@ public class PostDetails {
     @Column(name="isLinkedIn")
     private boolean isLinkedIn;
 
+    @Column(name = "image_name")
+    private String imageName;
+
 }
